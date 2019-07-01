@@ -42,4 +42,8 @@
   <ItemGroup>
     <Text Include="merlinio_cmd.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" />
+    <None Include="..\LICENSE" />
+  </ItemGroup>
 </Project>
