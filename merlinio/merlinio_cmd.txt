@@ -1,0 +1,174 @@
+1) Calling merlinio
+
+merlinio <input-file-name> [options]
+
+Example:
+	merlinio "images\merlin\dataset" -o pacbed.dat -c pacbed_subframe
+
+
+
+2) List of command-line options for merlinio
+
+The input file name must follow the program call. Based on this
+parameter, the program will access the merlin header file
+"<input-file-name>.hdr" and the sequence of merlin data files
+"<input-file-name><index>.mib"
+
+
+-o | -output <string>
+	Set the output file name. The output file name will be preset
+	with the given string. You may override this by using the
+	control command "set_output_file".
+
+-c | -control <string>
+	Set the control file name.
+
+/sfh | /scanframeheaders
+	Switch to carefully scan all frame headers, leading to longer
+	file scan times. Fast scanning will be used when this option
+	is omitted.
+
+/debug
+	Switch to additional text output.
+
+/silent
+	Switch to minimum text output.
+
+
+
+3) List of control commands for merlinio
+
+3.1) set command
+
+set_scan_rect_roi
+	Sets a rectangular scan region of interest (roi).
+	Enter <x0>,<y0>,<x1>,<y1> in the following line to define the
+	scan rect roi in by its lower-left and upper-right corner.
+	The limiting points are	included in the evaluation.
+	By default the program uses the full scan frame. Original
+	pixels start with zero index.
+
+set_origin
+	Sets the origin of the coordinate system in pixels of
+	the detector frame (fractional pixels allowed).
+	Enter <x>,<y> in the following line to define the frame
+	origin point.
+
+set_sampling
+	Sets the components of a linear sampling matrix:
+	M = {{xi, xj}, {yi, yj}} translating pixel distances D = (di,dj)
+	to another 2d basis with X = M . D or
+	x = xi*di + xj*dj
+	y = yi*di + yj*dj
+	Enter <xi>,<xj>,<yi>,<yj> in the following line to define
+	the	sampling rates.
+
+set_annular_range
+	Defines minimum and maximum radius of an annular range.
+	Enter <r_min>,<r_max> in the following line.
+
+set_output_file
+	Sets a new output file name.
+	Enter the name string in the following line.
+
+set_defect_mask
+	Sets and loads a defect mask images. The mask image is
+	expected to contain a series of 32-bit integer values, one
+	for each frame pixel. Pixels masked by a value other than
+	0 will be replaced by an average estimate from surrounding
+	not masked pixels. The replacement will be done after
+	gain correction (see below).
+
+set_defect_list
+	Sets defects pixels from a text list of coordinates
+	loaded from a file. The file name must be provided as
+	input string. One pair of x,y coordinats is expected
+	in each line of the input file. Pixels listed will be
+	replaced by an average estimate from surrounding
+	not masked pixels. The replacement will be done after
+	gain correction (see below).
+
+set_defect_pixel
+	Sets a defect pixel. A pair of <x>,<y> coordinats 
+	must be provided as input. The value of the pixel will be
+	replaced by an average estimate from surrounding
+	not masked pixels. The replacement will be done after
+	gain correction (see below).
+
+unset_defect_pixel
+	Removes a pixel from the current defect pixel list.
+	The coordinates of the pixel to be removed must be given.
+	as pair of numbers <x>,<y>.
+
+unset_defect_list
+	Deletes the current defect list.
+
+set_gain_correction
+	Sets and loads a gain correction factor image. The gain
+	correction image is expected to contain a series of 32-bit
+	float values, one for each frame pixel. Frame intensities
+	will then be multiplied by the pixel gain factors before
+	processing the input data further (integration or averaging).
+
+unset_gain_correction
+	Stops using gain correction factors.
+
+
+
+3.2) operations
+
+
+extract_frames
+	Writes frames of the current scan roi as they are to a new file
+	without the headers. The data is not modified. An additional
+	text file is written with information about the structure of
+	the output.
+
+average_frames
+	Averages frames in the current scan roi. Writes 64-bit floating
+	point output of an averaged frame to a file using the current
+	output file name. Also writes a frame with the standard deviation.
+	Two files will be generated with different suffix
+	<output-file-name> + "_avg.dat" = average image
+	<output-file-name> + "_sdev.dat" = standard deviations
+
+integrate_annular_range
+	Integrates an annular range as currently set and for the current
+	scan roi. Writes 64-bit floating point output of integrated
+	intensities to a file using the current	output file name.
+
+center_of_mass
+	Calculates the center of mass contained in the current annular
+	range with respect to the current frame origin. Data is extracted
+	for the current scan roi and output in 64-bit floating point
+	format to files for each calculated component. Three files are
+	generated and saved with different name suffix
+	<output-file-name> + "_0-0.dat" = reference area integral
+	<output-file-name> + "_1-0.dat" = center of mass x component
+	<output-file-name> + "_1-1.dat" = center of mass y component
+	is added tp 
+
+exit
+	Stops command input leading to program exit.
+
+
+4) Notes
+
+4.1) Gain correction
+
+If set by "set_gain_correction", gain factors will be multiplied to
+original pixel values or to sums taken from original pixels and
+before any integration operation.
+
+4.2) Defect pixel correction
+
+The program hold a list of defect pixels marked for correction.
+You can add pixels to the list by the commands 
+"set_defect_mask", "set_defect_list", and "set_defect_pixel".
+or remove pixels by the commands
+"unset_defect_pixel" and "unset_defect_list" (see above).
+Values of pixels listed will be replaced by an average estimate
+taken from surrounding not masked pixels. The replacement will
+be done after gain correction. The correction will be applied
+to original pixel values or to sums taken from original pixels
+and before any integration operation.
