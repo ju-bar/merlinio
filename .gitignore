@@ -20,7 +20,7 @@ Merlin and Medipix3 Documentation v1.0.pdf
 x64/
 x86/
 bld/
-[Bb]in/
+# [Bb]in/
 [Oo]bj/
 [Ll]og/
 
