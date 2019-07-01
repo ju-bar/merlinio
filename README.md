@@ -23,3 +23,8 @@ merlinio "images\merlin\dataset" -o pacbed.dat -c pacbed_subframe
 
 See: https://github.com/ju-bar/merlinio/blob/master/merlinio/merlinio_cmd.txt
 
+## Version
+
+1.0
+
+2019-Jul-01

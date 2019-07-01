@@ -6,6 +6,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+gpl_file_header.txt
+Merlin and Medipix3 Documentation v1.0.pdf
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
