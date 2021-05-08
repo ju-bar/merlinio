@@ -27,9 +27,9 @@ This file is part of Merlinio.
 #include "merlin_hdr.h"
 
 constexpr auto MERLINIO_VER = 1;
-constexpr auto MERLINIO_VER_SUB = 0;
+constexpr auto MERLINIO_VER_SUB = 1;
 constexpr auto MERLINIO_VER_SUBSUB = 0;
-constexpr auto MERLINIO_VER_BUILD = 1904301635;
+constexpr auto MERLINIO_VER_BUILD = 3105081359;
 
 struct defect_pixel_corr {
 	size_t idx;
@@ -59,6 +59,7 @@ public:
 	
 	merlin_frame_calib frame_calib;
 	merlin_range range_annular;
+	merlin_pos offset_annular;
 	merlin_roi scan_rect_roi;
 	std::string str_file_input;
 	std::string str_file_output;
@@ -137,6 +138,8 @@ public:
 	int	set_sampling(std::string str_samp);
 
 	int set_annular_range(std::string str_rng);
+
+	int set_annular_offset(std::string str_pos);
 
 	bool is_defect_pixel(size_t idx);
 	

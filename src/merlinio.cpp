@@ -147,7 +147,7 @@ int write_data(char* buf, size_t nbytes, std::string str_file)
 int prepare_annular_detector(size_t nlen, double * detbuf, int * dethash, size_t * nhash, merlin_frame_hdr * pfhdr)
 {
 	size_t i = 0, j = 0;
-	double qm = 0.;
+	double qm = 0., qx = 0., qy = 0.;
 	merlin_pix p;
 	merlin_pos q;
 	bool bhash = false;
@@ -173,7 +173,9 @@ int prepare_annular_detector(size_t nlen, double * detbuf, int * dethash, size_t
 			return 20; // failed to get calibrated position
 		}
 		// hard mask // replace by detector transfer function later
-		qm = sqrt(q.x*q.x + q.y*q.y);
+		qx = q.x - prm.offset_annular.x;
+		qy = q.y - prm.offset_annular.y;
+		qm = sqrt(qx*qx + qy*qy);
 		if (qm >= prm.range_annular.min && qm < prm.range_annular.max) {
 			detbuf[i] = 1.;
 			if (bhash) {
@@ -1128,6 +1130,12 @@ int run_ctrl(std::string file_ctrl)
 			bprocessed = true;
 		}
 
+		if (scmd == "set_annular_offset") {
+			nerr = ctrl_getline(icmd, scmd, &sprm); // get parameter input
+			if (nerr == 0) nerr = prm.set_annular_offset(sprm);
+			bprocessed = true;
+		}
+
 		if (scmd == "set_output_file") {
 			nerr = ctrl_getline(icmd, scmd, &sprm); // get parameter input
 			if (nerr == 0) prm.str_file_output = sprm;
@@ -1291,7 +1299,7 @@ int main(int argc, char* argv[])
 	if (prm.btalk) {
 		std::cout << "Running program MERLINIO\n";
 		std::cout << "  "<< MERLINIO_VER <<"."<< MERLINIO_VER_SUB << "." << MERLINIO_VER_SUBSUB << " ("<< MERLINIO_VER_BUILD << ")\n";
-		std::cout << "  by J. Barthel, Copyright (c) 2019\n";
+		std::cout << "  by J. Barthel, Copyright (c) 2021\n";
 		std::cout << "  ju.barthel@fz-juelich.de\n";
 		std::cout << "  Forschungszentrum Juelich GmbH, Juelich, Germany\n";
 		std::cout << "\n";

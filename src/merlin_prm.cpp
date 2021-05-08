@@ -43,6 +43,7 @@ merlin_params::merlin_params()
 	frame_calib.a1 = { 0., 1. };
 
 	range_annular = { 0., 0. };
+	offset_annular = { 0., 0. };
 
 	scan_rect_roi = { 0, 0, 0, 0 };
 
@@ -519,6 +520,33 @@ int merlin_params::set_annular_range(std::string str_rng)
 	}
 	if (ndebug > 3) {
 		std::cout << "merlin_params::set_annular_range: merlin_params::range_annular=(" << range_annular.min << "," << range_annular.max << ")\n";
+	}
+	return 0;
+}
+
+int merlin_params::set_annular_offset(std::string str_pos)
+{
+	int i_pos = 0;
+	int n_prm = 0;
+	std::string str_num = "";
+	if (ndebug > 3) {
+		std::cout << "merlin_params::set_annular_offset: str_pos=" << str_pos << std::endl;
+	}
+	while (i_pos >= 0 && n_prm < 2) {
+		i_pos = read_param(i_pos, &str_pos, &str_num);
+		if (i_pos < 0) { return 1 + n_prm; } // parsing error
+		switch (n_prm) {
+		case 0:
+			offset_annular.x = (double)atof(str_num.c_str());
+			break;
+		case 1:
+			offset_annular.y = (double)atof(str_num.c_str());
+			break;
+		}
+		n_prm++;
+	}
+	if (ndebug > 3) {
+		std::cout << "merlin_params::set_annular_offset: merlin_params::offset_annular=(" << offset_annular.x << "," << offset_annular.y << ")\n";
 	}
 	return 0;
 }

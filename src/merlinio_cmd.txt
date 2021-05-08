@@ -67,6 +67,10 @@ set_annular_range
 	Defines minimum and maximum radius of an annular range.
 	Enter <r_min>,<r_max> in the following line.
 
+set_annular_offset
+	Defines the x and y offset of an annular detector.
+	Enter <x_0>,<y_0> in the following line.
+
 set_output_file
 	Sets a new output file name.
 	Enter the name string in the following line.
